@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context=".MainActivity">
+    tools:context=".DetalleNota">
 
     <TextView android:layout_width="match_parent"
               android:text="NOTA"
@@ -46,10 +46,4 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
-    <Button android:layout_width="match_parent"
-            android:id="@+id/btn_guardarExterno"
-
-            android:textAlignment="center"
-            android:text="Guardar en carpeta pública"
-            android:layout_height="wrap_content"/>
 </LinearLayout>
