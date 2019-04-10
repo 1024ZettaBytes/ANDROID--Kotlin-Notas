@@ -13,7 +13,8 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".Principal"
-                android:label="@string/title_activity_principal"
+                android:label="Notas"
+                android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,9 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".DetalleNota">
+        <activity android:name=".DetalleNota"
+                    android:screenOrientation="portrait"
+            >
 
         </activity>
+
     </application>
 
 </manifest>

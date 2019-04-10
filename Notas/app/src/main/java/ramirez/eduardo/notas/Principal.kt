@@ -1,5 +1,6 @@
 package ramirez.eduardo.notas
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Toast
 
 import kotlinx.android.synthetic.main.activity_principal.*
+import kotlinx.android.synthetic.main.content_principal.*
 import kotlinx.android.synthetic.main.nota.view.*
 import java.io.File
 
@@ -23,23 +26,43 @@ class Principal : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            var intent = Intent(this, DetalleNota::class.java)
-            this.startActivity(intent)
+
+           var intent = Intent(this, DetalleNota::class.java)
+            intent.putExtra("EDICION",false)
+            this.startActivityForResult(intent, 1)
         }
+       actualizaLista()
     }
     private fun crearnota(){
-        val archivos = File(ubicacion(), "Notas").listFiles()
-        for(i in archivos){
-var nota = Nota(i.name)
-            listaNotas.add(nota)
+        var archivos = File(ubicacion())
+        archivos.walk().forEach {
+            if(it.isFile) {
+                var nota = Nota(it.name)
+                listaNotas.add(nota)
+            }
+        }
+
         }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+
+            if (resultCode == Activity.RESULT_OK) {
+               actualizaLista()
+            }
 
     }
+
+private fun actualizaLista(){
+    listaNotas = ArrayList()
+    crearnota()
+    var adaptador = AdaptadorNota(this, listaNotas)
+    listView.adapter = adaptador
+}
     private fun ubicacion():String{
         var carpeta = File(Environment.getExternalStorageDirectory(), "Notas")
-        if(carpeta.exists()){
+        if(!carpeta.exists()){
             carpeta.mkdir()
         }
         return carpeta.absolutePath
@@ -59,18 +82,19 @@ private class AdaptadorNota:BaseAdapter{
             vista.nota_nombre.text = nota.nombre
         }
         vista.setOnClickListener {
-            val intent = Intent(this.context, DetallePelicula::class.java)
-            intent.putExtra("nombreP", pel.nombre)
-            intent.putExtra("descripcionP", pel.descripcion)
-            intent.putExtra("imagenP", pel.imagen)
-            context!!.startActivity(intent)
+            val intent = Intent(this.context, DetalleNota::class.java)
+            intent.putExtra("EDICION",true)
+            intent.putExtra("tituloN", nota.nombre)
+            val origin = this.context as Activity
+            origin.startActivityForResult(intent, 1)
+
         }
 
         return vista
     }
 
     override fun getItem(position: Int): Any {
-        return peliculas?.get(position) ?: "Error"
+        return notas?.get(position) ?: "Error"
     }
 
     override fun getItemId(position: Int): Long {
@@ -78,7 +102,7 @@ private class AdaptadorNota:BaseAdapter{
     }
 
     override fun getCount(): Int {
-        return peliculas?.size ?:0
+        return notas?.size ?:0
     }
 }
 }
